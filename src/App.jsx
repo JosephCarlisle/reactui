@@ -33,6 +33,7 @@ export default function App() {
   const [selectedOption, setSelectedOption] = useState('');
   const [toggleStates, setToggleStates]     = useState([]);
   const [errorMsgReceived, setErrorMsg] = useState('');
+  const [ok, setOk] = useState(true);
 
   useEffect(() => {
     if(lastMessage === null){
@@ -43,6 +44,11 @@ export default function App() {
     if (parsedMsg.action === "msg"){
       if (parsedMsg.type === "error"){
         setErrorMsg(parsedMsg.body || "error");
+        setOk(false);
+      }
+      if (parsedMsg.type === "status"){
+        setErrorMsg(parsedMsg.body || "error");
+        setOk(true);
       }
       else{
         return;
@@ -109,6 +115,15 @@ export default function App() {
     let copyArray = JSON.parse(JSON.stringify(toggleStates));
     copyArray[index] = !copyArray[index]
     setToggleStates(copyArray);
+    let comm = toggleStates[index] ? "Open" : "Closed";
+    let fullCom = toggles[index].concat(comm);
+    sendMessage(JSON.stringify({
+      action: "msg",
+      type: "cmd",
+      body: {
+        item: fullCom,
+      },
+    }));
 };
 
   
@@ -191,7 +206,7 @@ export default function App() {
         </Flex>
         <ButtonList items={buttons}/>
         <ToggleList items={toggles} states={toggleStates}/>
-        <p className="error">{errorMsgReceived}</p>
+        <p className={ ok ?  "good": "error"}>{errorMsgReceived}</p>
       </div>
     );
 }

@@ -109,6 +109,11 @@ h1 {
   border-color: #ffffff;
 }
 
+.good {
+  color: rgb(5, 239, 63);
+  border-color: #ffffff;
+}
+
 .action {
   width: 100px;
 }
